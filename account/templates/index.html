@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank</title>
+    <script src="https:/cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+    <div class="mx-10 p-10 bg-white shadow-xl">
+        <h1 class="pb-2 font-bold text-lg">Create User</h1>
+        {% if messages %}
+        {% for message in messages %}
+        {% if message.extra_tags == "create_user" %}
+        <div class="my-2 p-2 bg-red-500">{{ message }}</div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        <form method="POST" action="{% url 'create_user' %}">
+            {% csrf_token %}
+            <div class="pb-4">
+                <label id="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter Name"
+                    class="w-full px-4 py-2.5 border border-2" required />
+            </div>
+            <div class="pb-4">
+                <label id="account_number">Account Number</label>
+                <input type="number" id="account_number" name="account_number" placeholder="Enter Account Number"
+                    class="w-full px-4 py-2.5 border border-2" required />
+            </div>
+            <input type="submit" value="Submit" class="px-4 py-2 bg-green-500 text-white text-center" /><br />
+        </form>
+    </div>
+    <br />
+    <div class="mx-10 bg-white p-10 shadow-xl">
+        <h1 class="pb-2 font-bold text-lg">Transfer Amount</h1>
+        {% if messages %}
+        {% for message in messages %}
+        {% if message.extra_tags == "transaction" %}
+        <div class="my-2 p-2 bg-red-500">{{ message }}</div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        <form method="POST" action="{% url 'transfer_amount' %}">
+            {% csrf_token %}
+            <div class="pb-4">
+                <label id="transaction_type">Transaction Type</label>
+                <select name="transaction_type" id="transaction_type" placeholder="Choose Transaction Type"
+                    class="w-full px-4 py-2.5 border border-2">
+                    <option value="deposit">Deposit</option>
+                    <option value="withdraw">Withdraw</option>
+                </select>
+            </div>
+            <div class="pb-4">
+                <label id="account_number">Account Number</label>
+                <input type="text" id="name" name="account_number" placeholder="Enter Account Number"
+                    class="w-full px-4 py-2.5 border border-2" required />
+            </div>
+            <div class="pb-4">
+                <label id="amount">Amount</label>
+                <input type="number" id="amount" name="amount" placeholder="Enter Amount"
+                    class="w-full px-4 py-2.5 border border-2" required />
+            </div>
+            <input type="submit" value="Submit" class="px-4 py-2 bg-green-500 text-white text-center" />
+        </form>
+    </div>
+    <br />
+    <div class="mx-10 bg-white p-10 shadow-xl">
+        <h1 class="pb-2 font-bold text-lg">Get Mini Statement</h1>
+        {% if messages %}
+        {% for message in messages %}
+        {% if message.extra_tags == "download_csv" %}
+        <div class="my-2 p-2 bg-red-500">{{ message }}</div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        <form method="POST" action="{% url 'download_csv' %}">
+            {% csrf_token %}
+            <div class="pb-4">
+                <label id="account_number">Account Number</label>
+                <input type="number" id="account_number" name="account_number" placeholder="Enter Account Number"
+                    class="w-full px-4 py-2.5 border border-2" required />
+            </div>
+            <div class="pb-4">
+                <label id="start_date">From</label>
+                <input type="date" id="start_date" name="start_date" class="w-full px-4 py-2.5 border border-2"
+                    required />
+            </div>
+            <div class="pb-4">
+                <label id="end_date">To</label>
+                <input type="date" id="end_date" name="end_date" class="w-full px-4 py-2.5 border border-2" required />
+            </div>
+            <input type="submit" value="Submit" class="px-4 py-2 bg-green-500 text-white text-center" /><br />
+        </form>
+    </div>
+    <br />
+    <div class="mx-10 bg-white p-10 shadow-xl">
+        <h1 class="pb-2 font-bold text-lg">All Account Holders</h1>
+        <div class="flex flex-wrap">
+            <div class="w-1/3 p-2 border text-bold">
+                Name
+            </div>
+            <div class="w-1/3 p-2 border text-bold">
+                Account Number
+            </div>
+            <div class="w-1/3 p-2 border text-bold">
+                Current Balance
+            </div>
+            {% for i in user %}
+            <div class="w-1/3 p-2 border">
+                {{i.name}}
+            </div>
+            <div class="w-1/3 p-2 border">
+                {{i.account_number}}
+            </div>
+            <div class="w-1/3 p-2 border">
+                {{i.current_balance}}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+<br />
+<div class="mx-10 bg-white p-10 shadow-xl">
+    <h1 class="pb-2 font-bold text-lg">All Transaction</h1>
+    <div class="flex flex-wrap">
+        <div class="w-1/6 p-2 border text-bold">
+            Name
+        </div>
+        <div class="w-1/6 p-2 border text-bold">
+            Account Number
+        </div>
+        <div class="w-1/6 p-2 border text-bold">
+            Amount
+        </div>
+        <div class="w-1/6 p-2 border text-bold">
+            Transaction Date
+        </div>
+        <div class="w-1/6 p-2 border text-bold">
+            Transaction Type
+        </div>
+        <div class="w-1/6 p-2 border text-bold">
+            Current Balance
+        </div>
+        {% for i in transaction %}
+        <div class="w-1/6 p-2 border">
+            {{i.user.name}}
+        </div>
+        <div class="w-1/6 p-2 border">
+            {{i.user.account_number}}
+        </div>
+        <div class="w-1/6 p-2 border">
+            {{i.amount}}
+        </div>
+        <div class="w-1/6 p-2 border">
+            {{i.transfer_at|date}}
+        </div>
+        <div class="w-1/6 p-2 border">
+            {{i.transction_type}}
+        </div>
+        <div class="w-1/6 p-2 border">
+            {{i.user.current_balance}}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+</body>
+
+</html>
